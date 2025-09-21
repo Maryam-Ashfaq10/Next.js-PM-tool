@@ -37,13 +37,7 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      {/* Danger Zone */}
-      <section className="p-6 border rounded-md bg-red-50 shadow-sm">
-        <h2 className="text-xl font-semibold text-red-600 mb-4">Danger Zone</h2>
-        <button className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-          Delete Account
-        </button>
-      </section>
+    
     </div>
   );
 }

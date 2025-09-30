@@ -1,4 +1,3 @@
-// app/settings/page.tsx
 export default function SettingsPage() {
   return (
     <div className="space-y-8">

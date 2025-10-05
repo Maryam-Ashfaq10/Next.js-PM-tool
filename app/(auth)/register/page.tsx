@@ -9,9 +9,49 @@ export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!name || !email || !password) {
+      setError("All fields are required");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // your API returns { message: "..." }
+        setError(data.message || "Something went wrong");
+        return;
+      }
+
+      setSuccess(data.message || "Signup successful!");
+      setName("");
+      setEmail("");
+      setPassword("");
+
+      // wait a bit so user can see success
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
+
+    } catch (error) {
+      setError("Failed to connect to the server");
+    }
   }
 
   return (
@@ -21,7 +61,7 @@ export default function RegisterPage() {
         <h1 className="text-2xl font-bold text-center mb-6">Register</h1>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Name */}
           <div>
             <label
@@ -88,7 +128,8 @@ export default function RegisterPage() {
             Register
           </button>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="text-center" style={{ color: "red" }}>{error}</p>}
+          {success && <p className="text-center" style={{ color: "green" }}>{success}</p>}
 
         </form>
 

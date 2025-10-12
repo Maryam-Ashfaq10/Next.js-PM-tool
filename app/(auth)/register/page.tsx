@@ -34,7 +34,6 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        // your API returns { message: "..." }
         setError(data.message || "Something went wrong");
         return;
       }

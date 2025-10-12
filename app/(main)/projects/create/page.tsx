@@ -9,16 +9,39 @@ export default function NewProjectPage() {
     status: "draft",
     dueDate: "", // 👈 new field for due date
   });
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     console.log("Creating project:", form);
-    // TODO: send POST to /api/projects/create
+
+    try {
+      const res = await fetch("/api/projects/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+
+      if (!res.ok) {
+        setError(data.message || "Something went wrong");
+        return;
+      }
+
+      setSuccess(data.message || "Signup successful!");
+
+    } catch (error) {
+      setError("Failed to connect to the server");
+
+    }
   };
 
   return (

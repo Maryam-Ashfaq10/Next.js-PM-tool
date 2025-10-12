@@ -33,6 +33,11 @@ export default function LoginPage() {
       setSuccess("Login successful! Redirecting...");
 
       //redirect here
+      // wait a bit so user can see success
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+
 
     } catch (error) {
       setError("Failed to connect to the server");

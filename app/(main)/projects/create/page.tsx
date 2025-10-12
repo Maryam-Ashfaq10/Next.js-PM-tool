@@ -7,6 +7,7 @@ export default function NewProjectPage() {
     name: "",
     description: "",
     status: "draft",
+    dueDate: "", // 👈 new field for due date
   });
 
   const handleChange = (e: any) => {
@@ -17,7 +18,7 @@ export default function NewProjectPage() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log("Creating project:", form);
-    // TODO: send POST to /api/projects
+    // TODO: send POST to /api/projects/create
   };
 
   return (
@@ -63,10 +64,25 @@ export default function NewProjectPage() {
             onChange={handleChange}
             className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
           >
-            <option value="draft">Draft</option>
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
+            <option value="todo">TODO</option>
+            <option value="inprogress">IN PROGRESS</option>
+            <option value="uat">UAT</option>
+            <option value="prod">PRODUCTION</option>
+            <option value="completed">COMPLETED</option>
           </select>
+        </div>
+
+        {/* Due Date */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Due Date</label>
+          <input
+            type="date"
+            name="dueDate"
+            min={new Date().toISOString().split("T")[0]}
+            value={form.dueDate}
+            onChange={handleChange}
+            className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+          />
         </div>
 
         {/* Submit */}

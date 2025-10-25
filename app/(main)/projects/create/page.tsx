@@ -6,7 +6,7 @@ export default function NewProjectPage() {
   const [form, setForm] = useState({
     name: "",
     description: "",
-    status: "draft",
+    status: "todo",
     dueDate: "", // 👈 new field for due date
   });
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +37,13 @@ export default function NewProjectPage() {
       }
 
       setSuccess(data.message || "Signup successful!");
+
+      setForm({
+        name: "",
+        description: "",
+        status: "todo",
+        dueDate: "",
+      })
 
     } catch (error) {
       setError("Failed to connect to the server");
@@ -108,6 +115,10 @@ export default function NewProjectPage() {
           />
         </div>
 
+        {error && <p className="text-center" style={{ color: "red" }}>{error}</p>}
+        {success && <p className="text-center" style={{ color: "green" }}>{success}</p>}
+
+
         {/* Submit */}
         <button
           type="submit"
@@ -115,6 +126,8 @@ export default function NewProjectPage() {
         >
           Create Project
         </button>
+
+
       </form>
     </div>
   );

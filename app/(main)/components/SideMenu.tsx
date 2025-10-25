@@ -14,7 +14,7 @@ const menuSections = [
   {
     label: "Projects",
     items: [
-      { name: "All Projects", path: "/projects" },
+      { name: "All Projects", path: "/projects/all" },
       { name: "Create Project", path: "/projects/create" },
     ],
   },

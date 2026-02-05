@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Project {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   status: string;
@@ -64,7 +65,7 @@ export default function ProjectsPage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
               <div
-                key={project.id}
+                key={project._id}
                 className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-200 hover:-translate-y-1"
               >
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -73,7 +74,7 @@ export default function ProjectsPage() {
                 <p className="text-gray-600 mb-4 ">
                   {project.description}
                 </p>
-                 <p className="text-gray-600 mb-4 ">
+                <p className="text-gray-600 mb-4 ">
                   {project.status}
                 </p>
 
@@ -88,6 +89,11 @@ export default function ProjectsPage() {
                     Created: {new Date(project.createdAt).toLocaleString()}
                   </p>
                 )}
+                <Link
+                  href={`/projects/edit/${project._id}`}
+                  className="text-blue-500 hover:text-blue-700">
+                  View Project
+                </Link>
               </div>
             ))}
           </div>

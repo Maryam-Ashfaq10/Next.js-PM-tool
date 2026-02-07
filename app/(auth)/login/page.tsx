@@ -35,7 +35,7 @@ export default function LoginPage() {
       //redirect here
       // wait a bit so user can see success
       setTimeout(() => {
-        router.push("/");
+        window.location.href = "/";
       }, 1000);
 
 

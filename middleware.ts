@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 const protectedPaths = ["/", "/dashboard", "/projects", "/settings"];
 const authPaths = ["/login", "/register"];
 
-export function middleware(req: NextRequest) {
-  console.log("Middleware running");
+export async function middleware(req: NextRequest) {
   const token = req.cookies.get("auth_token")?.value;
   const { pathname } = req.nextUrl;
 
@@ -15,14 +14,23 @@ export function middleware(req: NextRequest) {
   );
   const isAuthPath = authPaths.some((p) => pathname === p || pathname.startsWith(p + "/"));
 
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET || "");
+
+  const verifyToken = async () => {
+    if (!token) return false;
+    try {
+      await jwtVerify(token, secret);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const isValid = await verifyToken();
+
   // Authenticated user visiting login/register → redirect to dashboard
   if (token && isAuthPath) {
-    try {
-      jwt.verify(token, process.env.JWT_SECRET!);
-      return NextResponse.redirect(new URL("/", req.url));
-    } catch {
-      // token invalid, clear and let them through to login
-    }
+    if (isValid) return NextResponse.redirect(new URL("/", req.url));
   }
 
   // Unauthenticated user visiting protected route → redirect to login
@@ -31,11 +39,7 @@ export function middleware(req: NextRequest) {
   }
 
   if (token && isProtectedPath) {
-    try {
-      jwt.verify(token, process.env.JWT_SECRET!);
-      return NextResponse.next();
-    } catch (error) {
-      console.error("Middleware error:", error);
+    if (!isValid) {
       const res = NextResponse.redirect(new URL("/login", req.url));
       res.cookies.set("auth_token", "", { maxAge: 0 });
       return res;

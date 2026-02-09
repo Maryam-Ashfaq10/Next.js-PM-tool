@@ -1,11 +1,23 @@
 "use client"; 
-import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
 
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+    } finally {
+      // Whether or not the API call errors, send user to login
+      router.push("/login");
+    }
+  };
 
   return (
     <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
@@ -31,7 +43,8 @@ export default function Header() {
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
               onClick={() => {
                 setOpen(false);
-                // add logout logic here
+                handleLogout();
+                
               }}
             >
               Logout

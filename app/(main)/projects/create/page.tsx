@@ -1,16 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function NewProjectPage() {
   const [form, setForm] = useState({
     name: "",
     description: "",
     status: "todo",
-    dueDate: "", // 👈 new field for due date
+    dueDate: "",
+    assigneeId: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [users, setUsers] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("/api/users/all");
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.error(data.message || "Failed to fetch users");
+          return;
+        }
+
+        setUsers(data);
+      } catch (err) {
+        console.error("Error fetching users", err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -43,6 +65,7 @@ export default function NewProjectPage() {
         description: "",
         status: "todo",
         dueDate: "",
+        assigneeId: "",
       })
 
     } catch (error) {
@@ -99,6 +122,24 @@ export default function NewProjectPage() {
             <option value="uat">UAT</option>
             <option value="prod">PRODUCTION</option>
             <option value="completed">COMPLETED</option>
+          </select>
+        </div>
+
+        {/* Assignee */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Assignee</label>
+          <select
+            name="assigneeId"
+            value={form.assigneeId}
+            onChange={handleChange}
+            className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Unassigned</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name || user.email}
+              </option>
+            ))}
           </select>
         </div>
 

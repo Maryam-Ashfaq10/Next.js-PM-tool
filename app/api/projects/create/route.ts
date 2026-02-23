@@ -6,11 +6,12 @@ interface CreateProject {
     description: string;
     status: string;
     dueDate: string;
+    assigneeId: string;
 }
 
 export async function POST(req: Request) {
     try {
-        const { name, description, status, dueDate }: CreateProject = await req.json();
+        const { name, description, status, dueDate, assigneeId }: CreateProject = await req.json();
 
         if (!name) {
             return NextResponse.json({ message: "Data is required" }, { status: 400 });
@@ -29,6 +30,7 @@ export async function POST(req: Request) {
             dueDate: dueDate ? new Date(dueDate) : null,
             createdAt: new Date(),
             updatedAt: new Date(),
+            aassigneeId: assigneeId || null,
         };
 
         // Insert into MongoDB

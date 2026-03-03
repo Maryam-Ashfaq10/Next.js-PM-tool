@@ -10,6 +10,7 @@ interface Project {
   status: string;
   dueDate: string;
   createdAt?: string;
+  assigneeId: string;
 }
 
 export default function ProjectsPage() {

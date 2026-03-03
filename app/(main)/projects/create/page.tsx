@@ -9,10 +9,12 @@ export default function NewProjectPage() {
     status: "todo",
     dueDate: "",
     assigneeId: "",
+    assigneeName: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [users, setUsers] = useState<any[]>([]);
+  const [assigneeName, setAssigneeName] = useState<string>("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -36,7 +38,16 @@ export default function NewProjectPage() {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // for assignee name
+    if (name === "assigneeId") {
+      const user = users.find((user) => user.id === value);
+      setAssigneeName(user?.name || "");
+      setForm((prev) => ({ ...prev, assigneeName: user?.name || "" }));
+    } else {
+      setAssigneeName("");
+      setForm((prev) => ({ ...prev, assigneeName: "" }));
+    }
   };
 
   const handleSubmit = async (e: any) => {
@@ -66,6 +77,7 @@ export default function NewProjectPage() {
         status: "todo",
         dueDate: "",
         assigneeId: "",
+        assigneeName: ""
       })
 
     } catch (error) {

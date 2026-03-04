@@ -7,6 +7,8 @@ interface ProjectUpdateBody {
     description?: string;
     status?: string;
     dueDate?: string;
+    assigneeId?: string;
+    assigneeName?: string;
   }
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
@@ -55,6 +57,8 @@ export async function PUT(
             description: body.description,
             status: body.status,
             dueDate: body.dueDate,
+            assigneeId: body.assigneeId,
+            assigneeName: body.assigneeName,
           },
         },
         { returnDocument: "after" }

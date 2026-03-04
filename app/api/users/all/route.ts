@@ -15,7 +15,6 @@ export async function GET() {
       name: u.name ?? "",
       email: u.email ?? "",
     }));
-console.log(formatted);
     return NextResponse.json(formatted, { status: 200 });
   } catch (error) {
     console.error("Error fetching users:", error);

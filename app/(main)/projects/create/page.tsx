@@ -38,15 +38,21 @@ export default function NewProjectPage() {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-
-    // for assignee name
+  
     if (name === "assigneeId") {
       const user = users.find((user) => user.id === value);
-      setAssigneeName(user?.name || "");
-      setForm((prev) => ({ ...prev, assigneeName: user?.name || "" }));
+      const displayName = user ? (user.name || user.email || "") : "";
+  
+      setForm((prev) => ({
+        ...prev,
+        assigneeId: value,
+        assigneeName: displayName,
+      }));
     } else {
-      setAssigneeName("");
-      setForm((prev) => ({ ...prev, assigneeName: "" }));
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,   // update name, description, status, dueDate
+      }));
     }
   };
 

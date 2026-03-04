@@ -11,6 +11,7 @@ interface Project {
   dueDate: string;
   createdAt?: string;
   assigneeId: string;
+  assigneeName: string;
 }
 
 export default function ProjectsPage() {
@@ -78,6 +79,12 @@ export default function ProjectsPage() {
                 <p className="text-gray-600 mb-4 ">
                   {project.status}
                 </p>
+
+                {project.assigneeName && (
+                  <p className="text-gray-600 mb-4">
+                    Assignee: {project.assigneeName}
+                  </p>
+                )}
 
                 {project.dueDate && (
                   <p className="text-gray-600 mb-4">

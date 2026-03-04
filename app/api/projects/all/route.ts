@@ -12,6 +12,7 @@ export async function GET() {
 
         // Fetch all documents
         const projectsAll = await projectsCollection.find({}).toArray();
+        console.log(projectsAll);
 
         // Return response as JSON
         return new Response(JSON.stringify(projectsAll), {

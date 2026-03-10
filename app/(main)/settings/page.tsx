@@ -13,6 +13,10 @@ export default function SettingsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [formName, setFormName] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -25,6 +29,8 @@ export default function SettingsPage() {
         }
 
         setUser(data);
+        setFormName(data.name);
+        setFormEmail(data.email);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -34,6 +40,14 @@ export default function SettingsPage() {
 
     fetchMe();
   }, []);
+
+  const EditProfile = async () => {
+    if (!user) return;
+    setFormName(user.name);
+    setFormEmail(user.email);
+    setIsEditing(true);
+
+  }
 
   if (loading) {
     return (
@@ -62,8 +76,15 @@ export default function SettingsPage() {
           <div>
             <span className="font-medium">Email:</span> {user.email}
           </div>
-         
+
         </div>
+
+        <button
+          onClick={EditProfile}
+          className="px-4 py-2 mt-4 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        >
+          Edit profile
+        </button>
       </section>
     </div>
   );

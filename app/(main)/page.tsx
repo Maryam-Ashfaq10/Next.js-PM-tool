@@ -1,10 +1,34 @@
-import Image from "next/image";
+'use client';
 
+import { useEffect, useState } from "react";
+
+interface User {
+  name: string;
+}
 export default function Home() {
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const res = await fetch("/api/auth/userProfile");
+        const data = await res.json();
+        if (res.ok) {
+          setUser({ name: data.name });
+        }
+      } catch {
+        // ignore, show generic greeting
+      }
+    };
+
+    fetchMe();
+  }, []);
+
   return (
     <div className="flex flex-col h-screen p-6">
       {/* Heading */}
-      <h1 className="text-2xl font-bold mb-6">Hi User</h1>
+      <h1 className="text-2xl font-bold mb-6"> Hi {user ? user.name : "User"}</h1>
 
       {/* Cards Container */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

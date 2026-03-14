@@ -10,6 +10,7 @@ interface Project {
   dueDate: string;
   assigneeId: string;
   assigneeName: string;
+  comments: string;
 }
 
 export default function EditProjectPage() {
@@ -133,39 +134,53 @@ export default function EditProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          Edit {project?.name}
+    <div className="min-h-screen bg-gray-50 py-10 px-4">
+      <div className="max-w-2xl mx-auto bg-white shadow-sm border border-gray-100 rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-gray-800 mb-1">
+          Edit project
         </h1>
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-1">Project Name</label>
+       
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Project name */}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Project name
+            </label>
             <input
               type="text"
               name="name"
-              value={project?.name}
+              value={project?.name ?? ""}
               onChange={handleChange}
-              className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
+          {/* Description */}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Description
+            </label>
             <textarea
               name="description"
-              value={project?.description}
+              value={project?.description ?? ""}
               onChange={handleChange}
-              className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+              rows={3}
+              className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Status</label>
+          {/* Status + Assignee */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Status
+              </label>
               <select
                 name="status"
-                value={project?.status}
+                value={project?.status ?? ""}
                 onChange={handleChange}
-                className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="todo">TODO</option>
                 <option value="inprogress">IN PROGRESS</option>
@@ -175,13 +190,15 @@ export default function EditProjectPage() {
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Assignee</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Assignee
+              </label>
               <select
                 name="assigneeId"
-                value={project?.assigneeId}
+                value={project?.assigneeId ?? ""}
                 onChange={handleChange}
-                className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="">Unassigned</option>
                 {users.map((user) => (
@@ -190,37 +207,58 @@ export default function EditProjectPage() {
                   </option>
                 ))}
               </select>
-
               {project?.assigneeName && (
                 <p className="text-xs text-gray-500 mt-1">
                   Current: {project.assigneeName}
                 </p>
               )}
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Due Date</label>
-              <input
-                type="date"
-                name="dueDate"
-                value={project?.dueDate}
-                onChange={handleChange}
-                className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+          {/* Due date */}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Due date
+            </label>
+            <input
+              type="date"
+              name="dueDate"
+              value={project?.dueDate ?? ""}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
 
+          {/* Comments */}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Comments
+            </label>
+            <textarea
+              name="comments"
+              value={project?.comments ?? ""}
+              onChange={handleChange}
+              rows={3}
+              className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+
+          {/* Actions + error */}
+          {error && (
+            <p className="text-sm text-red-500 text-center">{error}</p>
+          )}
+
+          <div className="flex justify-end gap-3 pt-2">
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-60"
             >
-              {saving ? "Saving..." : "Save Changes"}
+              {saving ? "Saving..." : "Save changes"}
             </button>
-            {error && <p className="text-center" style={{ color: "red" }}>{error}</p>}
           </div>
         </form>
       </div>
-
     </div>
-  )
+  );
 }

@@ -10,6 +10,7 @@ export default function NewProjectPage() {
     dueDate: "",
     assigneeId: "",
     assigneeName: "",
+    comments: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -58,7 +59,6 @@ export default function NewProjectPage() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("Creating project:", form);
 
     try {
       const res = await fetch("/api/projects/create", {
@@ -83,7 +83,8 @@ export default function NewProjectPage() {
         status: "todo",
         dueDate: "",
         assigneeId: "",
-        assigneeName: ""
+        assigneeName: "",
+        comments: "",
       })
 
     } catch (error) {

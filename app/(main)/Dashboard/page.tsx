@@ -62,32 +62,7 @@ const DUMMY = {
       assigneeName: 'Jordan Lee',
     },
   ],
-  recentActivity: [
-    {
-      id: 'a1',
-      message: 'moved to UAT',
-      projectName: 'Mobile app MVP',
-      at: '2026-05-23T10:30:00.000Z',
-    },
-    {
-      id: 'a2',
-      message: 'created project',
-      projectName: 'Q3 marketing campaign',
-      at: '2026-05-23T09:15:00.000Z',
-    },
-    {
-      id: 'a3',
-      message: 'marked completed',
-      projectName: 'Onboarding docs',
-      at: '2026-05-22T16:45:00.000Z',
-    },
-    {
-      id: 'a4',
-      message: 'due date updated',
-      projectName: 'Website redesign',
-      at: '2026-05-22T11:00:00.000Z',
-    },
-  ],
+  
 };
 
 function formatDue(iso: string) {
@@ -125,7 +100,7 @@ function StatCard({
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
-  const { stats, byStatus, dueSoon, recentActivity } = DUMMY;
+  const { stats, byStatus, dueSoon } = DUMMY;
   const statusTotal = byStatus.reduce((s, x) => s + x.count, 0) || 1;
 
   useEffect(() => {
@@ -150,7 +125,7 @@ export default function DashboardPage() {
             Hi{user ? `, ${user.name}` : ''}
           </h1>
           <p className="text-gray-500 mt-1">
-            Overview of your projects and what needs attention.
+            Overview of your projects
           </p>
         </div>
         <div className="flex gap-2">
@@ -258,23 +233,7 @@ export default function DashboardPage() {
         </section>
       </div>
 
-      {/* Recent activity */}
-      <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent activity</h2>
-        <ul className="divide-y divide-gray-100">
-          {recentActivity.map((item) => (
-            <li key={item.id} className="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-              <p className="text-gray-800">
-                <span className="font-medium">{item.projectName}</span>{' '}
-                <span className="text-gray-600">{item.message}</span>
-              </p>
-              <time className="text-xs text-gray-400 shrink-0">
-                {new Date(item.at).toLocaleString()}
-              </time>
-            </li>
-          ))}
-        </ul>
-      </section>
+     
     </div>
   );
 }

@@ -32,7 +32,7 @@ export async function POST(req: Request) {
             dueDate: dueDate ? new Date(dueDate) : null,
             createdAt: new Date(),
             updatedAt: new Date(),
-            aassigneeId: assigneeId || null,
+            assigneeId: assigneeId || null,
             assigneeName: assigneeName || null,
             comments: comments || null,
         };

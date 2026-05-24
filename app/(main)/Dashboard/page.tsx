@@ -45,7 +45,7 @@ const DUMMY = {
       name: 'Website redesign',
       status: 'inprogress',
       dueDate: '2026-05-25T17:00:00.000Z',
-      assigneeName: 'Alex Kim',
+      assigneeName: 'You',
     },
     {
       id: '2',
@@ -59,10 +59,10 @@ const DUMMY = {
       name: 'API migration',
       status: 'todo',
       dueDate: '2026-05-22T09:00:00.000Z',
-      assigneeName: 'Jordan Lee',
+      assigneeName: 'You',
     },
   ],
-  
+
 };
 
 function formatDue(iso: string) {
@@ -102,6 +102,26 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const { stats, byStatus, dueSoon } = DUMMY;
   const statusTotal = byStatus.reduce((s, x) => s + x.count, 0) || 1;
+
+  const [dashboard, setDashboard] = useState<typeof DUMMY | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/dashboard");
+        const data = await res.json();
+        console.log('dashboard data', data);
+        if (!res.ok) throw new Error(data.message || "Failed to load dashboard");
+        setDashboard(data);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Failed to load");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -233,7 +253,7 @@ export default function DashboardPage() {
         </section>
       </div>
 
-     
+
     </div>
   );
 }

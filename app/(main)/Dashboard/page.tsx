@@ -23,6 +23,30 @@ const STATUS_COLORS: Record<string, string> = {
   completed: 'bg-emerald-500',
 };
 
+interface DashboardData {
+  stats: {
+    total: number;
+    inProgress: number;
+    dueThisWeek: number;
+    overdue: number;
+    completed: number;
+  };
+  byStatus: { status: string; count: number }[];
+  dueSoon: {
+    id: string;
+    name: string;
+    status: string;
+    dueDate: string;
+    assigneeName: string;
+  }[];
+}
+
+const EMPTY_DASHBOARD: DashboardData = {
+  stats: { total: 0, inProgress: 0, dueThisWeek: 0, overdue: 0, completed: 0 },
+  byStatus: [],
+  dueSoon: [],
+};
+
 // Replace with API fetch later
 const DUMMY = {
   stats: {
@@ -100,28 +124,13 @@ function StatCard({
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
-  const { stats, byStatus, dueSoon } = DUMMY;
-  const statusTotal = byStatus.reduce((s, x) => s + x.count, 0) || 1;
 
-  const [dashboard, setDashboard] = useState<typeof DUMMY | null>(null);
+
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/dashboard");
-        const data = await res.json();
-        console.log('dashboard data', data);
-        if (!res.ok) throw new Error(data.message || "Failed to load dashboard");
-        setDashboard(data);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to load");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const { stats, byStatus, dueSoon } = dashboard ?? EMPTY_DASHBOARD;
+  const statusTotal = byStatus.reduce((s, x) => s + x.count, 0) || 1;
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -135,6 +144,40 @@ export default function DashboardPage() {
     };
     fetchMe();
   }, []);
+  
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/dashboard");
+        const data = await res.json();
+        // console.log('dashboard data', data);
+        if (!res.ok) throw new Error(data.message || "Failed to load dashboard");
+        setDashboard(data);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Failed to load");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto p-6 text-gray-500">
+        Loading dashboard…
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-6xl mx-auto p-6 text-red-600">
+        {error}
+      </div>
+    );
+  }
+
+
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -218,35 +261,44 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {dueSoon.map((p) => {
-                  const due = formatDue(p.dueDate);
-                  return (
-                    <tr key={p.id} className="border-b border-gray-50 last:border-0">
-                      <td className="py-3">
-                        <Link
-                          href={`/projects/edit/${p.id}`}
-                          className="font-medium text-gray-900 hover:text-blue-600"
-                        >
-                          {p.name}
-                        </Link>
-                      </td>
-                      <td className="py-3">
-                        <span className="text-xs font-medium bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">
-                          {STATUS_LABEL[p.status] ?? p.status}
-                        </span>
-                      </td>
-                      <td className="py-3 text-gray-600">{p.assigneeName}</td>
-                      <td className={`py-3 text-right ${due.tone}`}>
-                        {due.label}
-                        {due.badge && (
-                          <span className="ml-2 text-xs font-semibold uppercase">
-                            {due.badge}
+                {dueSoon.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-6 text-center text-gray-500">
+                      No upcoming due dates for your projects.
+                    </td>
+                  </tr>
+                ) : (
+                  dueSoon.map((p) => {
+                    const due = formatDue(p.dueDate);
+                    return (
+                      <tr key={p.id} className="border-b border-gray-50 last:border-0">
+                        <td className="py-3">
+                          <Link
+                            href={`/projects/edit/${p.id}`}
+                            className="font-medium text-gray-900 hover:text-blue-600"
+                          >
+                            {p.name}
+                          </Link>
+                        </td>
+                        <td className="py-3">
+                          <span className="text-xs font-medium bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">
+                            {STATUS_LABEL[p.status] ?? p.status}
                           </span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                        <td className="py-3 text-gray-600">{p.assigneeName}</td>
+                        <td className={`py-3 text-right ${due.tone}`}>
+                          {due.label}
+                          {due.badge && (
+                            <span className="ml-2 text-xs font-semibold uppercase">
+                              {due.badge}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+
               </tbody>
             </table>
           </div>

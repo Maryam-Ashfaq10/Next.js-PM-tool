@@ -10,6 +10,7 @@ interface ProjectUpdateBody {
     assigneeId?: string;
     assigneeName?: string;
     comments?: string;
+    priority?: string;
   }
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
@@ -61,6 +62,7 @@ export async function PUT(
             assigneeId: body.assigneeId,
             assigneeName: body.assigneeName,
             comments: body.comments,
+            priority: body.priority || "medium",
           },
         },
         { returnDocument: "after" }

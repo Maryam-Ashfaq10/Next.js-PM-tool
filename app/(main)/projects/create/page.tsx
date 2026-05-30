@@ -11,6 +11,7 @@ export default function NewProjectPage() {
     assigneeId: "",
     assigneeName: "",
     comments: "",
+    priority: "medium",
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -39,11 +40,11 @@ export default function NewProjectPage() {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-  
+
     if (name === "assigneeId") {
       const user = users.find((user) => user.id === value);
       const displayName = user ? (user.name || user.email || "") : "";
-  
+
       setForm((prev) => ({
         ...prev,
         assigneeId: value,
@@ -85,6 +86,7 @@ export default function NewProjectPage() {
         assigneeId: "",
         assigneeName: "",
         comments: "",
+        priority: "medium"
       })
 
     } catch (error) {
@@ -173,6 +175,21 @@ export default function NewProjectPage() {
             onChange={handleChange}
             className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
           />
+        </div>
+
+        {/* Priority */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Priority</label>
+          <select
+            name="priority"
+            value={form.priority}
+            onChange={handleChange}
+            className="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
         </div>
 
         {error && <p className="text-center" style={{ color: "red" }}>{error}</p>}

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 
+type ProjectPriority = "low" | "medium" | "high";
+
 interface CreateProject {
     name: string;
     description: string;
@@ -9,11 +11,12 @@ interface CreateProject {
     assigneeId: string;
     assigneeName: string;
     comments: string;
+    priority?: ProjectPriority;
 }
 
 export async function POST(req: Request) {
     try {
-        const { name, description, status, dueDate, assigneeId, assigneeName, comments }: CreateProject = await req.json();
+        const { name, description, status, dueDate, assigneeId, assigneeName, comments, priority }: CreateProject = await req.json();
 
         if (!name) {
             return NextResponse.json({ message: "Data is required" }, { status: 400 });
@@ -35,6 +38,7 @@ export async function POST(req: Request) {
             assigneeId: assigneeId || null,
             assigneeName: assigneeName || null,
             comments: comments || null,
+            priority: priority || "medium",
         };
 
         // Insert into MongoDB

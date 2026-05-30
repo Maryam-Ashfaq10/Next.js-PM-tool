@@ -12,6 +12,8 @@ interface Project {
   createdAt?: string;
   assigneeId: string;
   assigneeName: string;
+  priority?: "low" | "medium" | "high";
+
 }
 
 const STATUS_ORDER = [
@@ -30,9 +32,29 @@ const STATUS_LABEL: Record<string, string> = {
   completed: "Completed",
 };
 
+const PRIORITY_LABEL: Record<string, string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+};
+
+const PRIORITY_COLORS: Record<string, string> = {
+  low: "bg-slate-100 text-slate-700",
+  medium: "bg-amber-100 text-amber-800",
+  high: "bg-red-100 text-red-700",
+};
+
 function ProjectCard({ project }: { project: Project }) {
+  const priority = project.priority ?? "medium";
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+    <div className="relative bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+       <span
+        className={`absolute top-4 right-4 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${PRIORITY_COLORS[priority]}`}
+      >
+        {PRIORITY_LABEL[priority]}
+      </span>
+
       <h2 className="text-xl font-semibold text-gray-900 mb-2">{project.name}</h2>
       <p className="text-gray-600 mb-4">{project.description}</p>
       <span className="inline-block text-xs font-medium text-gray-600 bg-gray-100 rounded-full px-2 py-0.5 mb-4">

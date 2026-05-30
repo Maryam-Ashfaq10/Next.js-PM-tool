@@ -11,6 +11,7 @@ interface Project {
   assigneeId: string;
   assigneeName: string;
   comments: string;
+  priority?: "low" | "medium" | "high";
 }
 
 export default function EditProjectPage() {
@@ -227,6 +228,24 @@ export default function EditProjectPage() {
               onChange={handleChange}
               className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
+          </div>
+
+
+          {/* Priority */}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Priority
+            </label>
+            <select
+              name="priority"
+              value={project?.priority ?? ""}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
           </div>
 
           {/* Comments */}

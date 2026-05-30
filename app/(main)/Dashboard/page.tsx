@@ -144,7 +144,7 @@ export default function DashboardPage() {
     };
     fetchMe();
   }, []);
-  
+
   useEffect(() => {
     (async () => {
       try {
@@ -176,7 +176,6 @@ export default function DashboardPage() {
       </div>
     );
   }
-
 
 
   return (
